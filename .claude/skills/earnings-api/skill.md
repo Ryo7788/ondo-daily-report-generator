@@ -35,9 +35,15 @@ argument-hint: "[command] [date/ticker]"
 ### 1. 环境变量检查
 
 ```bash
+# 自动加载项目级 .env 文件
+if [ -f ".env" ]; then
+    export $(grep -v '^#' .env | xargs)
+fi
+
 API_KEY="${FMP_API_KEY}"
 if [ -z "$API_KEY" ]; then
     echo "Error: FMP_API_KEY 未配置"
+    echo "请运行 ./init.sh 配置 API Key"
     exit 1
 fi
 ```

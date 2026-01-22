@@ -1,6 +1,6 @@
-# Ondo 美股日报生成器
+# Ondo Daily Report Generator
 
-> 本目录用于生成 Ondo Global Markets 每日美股日报
+> 🤖 AI 驱动的 Ondo Global Markets 美股日报生成工具
 
 ## 快速开始
 
@@ -51,10 +51,11 @@
 ## 日报生成流程
 
 ```
-1. 确认日期 → 2. 数据采集 → 3. 生成初稿 → 4. 外部提示词 → 5. 完善日报 → 6. 最终验证
+1. 确认日期 → 2. 数据采集 → 3. 生成初稿 → 4. Grok查询 → 5. OpenAI查询 → 6. 完善日报 → 7. 最终验证
 ```
 
 详细流程见 `ONDO_DAILY_REPORT_TEMPLATE_PROMPT.txt`
+交互示例见 `TUTORIAL_DAILY_REPORT_EXAMPLE.md`
 
 ## 输出示例
 

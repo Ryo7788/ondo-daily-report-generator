@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Ondo 美股日报生成器 - 初始化脚本
-# 用于配置 API Keys
+# 用于配置 API Keys（同时支持 opencode 和 Claude Code）
 
 set -e
 
@@ -14,10 +14,11 @@ echo ""
 mkdir -p .claude
 
 # 检查是否已存在配置文件
-CONFIG_FILE=".claude/settings.local.json"
+ENV_FILE=".env"
+CLAUDE_CONFIG=".claude/settings.local.json"
 
-if [ -f "$CONFIG_FILE" ]; then
-    echo "⚠️  检测到已存在配置文件: $CONFIG_FILE"
+if [ -f "$ENV_FILE" ]; then
+    echo "⚠️  检测到已存在配置文件: $ENV_FILE"
     read -p "是否覆盖？(y/N): " overwrite
     if [ "$overwrite" != "y" ] && [ "$overwrite" != "Y" ]; then
         echo "已取消"
@@ -40,8 +41,17 @@ echo "2. FMP API Key (用于指数/商品/财报)"
 echo "   获取地址: https://financialmodelingprep.com"
 read -p "   FMP_API_KEY: " FMP_KEY
 
-# 生成配置文件
-cat > "$CONFIG_FILE" << EOF
+# 生成 .env 文件（opencode 和通用工具使用）
+cat > "$ENV_FILE" << EOF
+# Ondo 美股日报生成器 - API Keys
+# 此文件由 init.sh 自动生成，请勿提交到 Git
+
+MASSIVE_API_KEY=${POLYGON_KEY}
+FMP_API_KEY=${FMP_KEY}
+EOF
+
+# 生成 .claude/settings.local.json（Claude Code 使用）
+cat > "$CLAUDE_CONFIG" << EOF
 {
   "env": {
     "MASSIVE_API_KEY": "${POLYGON_KEY}",
@@ -54,10 +64,12 @@ echo ""
 echo "================================================"
 echo "✅ 配置完成！"
 echo ""
-echo "配置文件已保存到: $CONFIG_FILE"
+echo "已生成配置文件："
+echo "  - $ENV_FILE (opencode / 通用)"
+echo "  - $CLAUDE_CONFIG (Claude Code)"
 echo ""
 echo "下一步："
-echo "  1. 在此目录启动 Claude"
+echo "  1. 在此目录启动 AI 助手"
 echo "  2. 输入: 用模板帮我生成今天的 Ondo 日报"
 echo ""
 echo "================================================"

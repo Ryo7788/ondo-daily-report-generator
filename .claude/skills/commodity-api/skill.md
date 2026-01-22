@@ -48,9 +48,15 @@ argument-hint: "[symbol]"
 ### 1. 环境变量检查
 
 ```bash
+# 自动加载项目级 .env 文件
+if [ -f ".env" ]; then
+    export $(grep -v '^#' .env | xargs)
+fi
+
 API_KEY="${FMP_API_KEY}"
 if [ -z "$API_KEY" ]; then
     echo "Error: FMP_API_KEY 未配置"
+    echo "请运行 ./init.sh 配置 API Key"
     exit 1
 fi
 ```
@@ -67,19 +73,14 @@ BRENT → BZUSD
 
 ### 3. API 调用
 
-**单个商品报价**
+**单个商品报价**（使用 stable 端点）
 ```bash
-curl -s "https://financialmodelingprep.com/api/v3/quote/GCUSD?apikey=${API_KEY}"
+curl -s "https://financialmodelingprep.com/stable/quote?symbol=GCUSD&apikey=${API_KEY}"
 ```
 
 **批量商品报价**
 ```bash
-curl -s "https://financialmodelingprep.com/api/v3/quote/GCUSD,SIUSD,CLUSD?apikey=${API_KEY}"
-```
-
-**商品列表**
-```bash
-curl -s "https://financialmodelingprep.com/api/v3/symbol/available-commodities?apikey=${API_KEY}"
+curl -s "https://financialmodelingprep.com/stable/quote?symbol=GCUSD,SIUSD,CLUSD&apikey=${API_KEY}"
 ```
 
 ### 4. 返回数据结构

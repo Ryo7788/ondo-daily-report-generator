@@ -1,10 +1,13 @@
-# Ondo 美股日报生成器 - 使用教程
+# Ondo Daily Report Generator
+
+> 🤖 AI 驱动的 Ondo Global Markets 美股日报生成工具
 
 ## 目录
 
 - [简介](#简介)
 - [快速开始](#快速开始)
 - [详细流程](#详细流程)
+- [交互示例](#交互示例)
 - [Skills 使用指南](#skills-使用指南)
 - [环境配置](#环境配置)
 - [常见问题](#常见问题)
@@ -33,13 +36,24 @@ cd daily-report
 ./init.sh
 ```
 
-脚本会引导你输入 API Keys 并自动生成配置文件。
+脚本会引导你输入 API Keys 并自动生成配置文件：
+- `.env` — opencode 和通用工具使用
+- `.claude/settings.local.json` — Claude Code 使用
 
 ### 2. 手动配置（可选）
 
-如果不想用脚本，可手动创建 `.claude/settings.local.json`：
+如果不想用脚本，可手动创建配置文件：
 
+**方式 A: .env 文件（推荐，通用）**
+```bash
+# .env（项目根目录）
+MASSIVE_API_KEY=your_polygon_api_key
+FMP_API_KEY=your_fmp_api_key
+```
+
+**方式 B: Claude Code 配置**
 ```json
+// .claude/settings.local.json
 {
   "env": {
     "MASSIVE_API_KEY": "your_polygon_api_key",
@@ -58,7 +72,7 @@ cd daily-report
 
 ### 4. 按提示完成
 
-AI 会引导你完成 6 步流程，最终输出完整的日报 Markdown 文件。
+AI 会引导你完成 7 步流程，最终输出完整的日报 Markdown 文件。
 
 ---
 
@@ -66,42 +80,37 @@ AI 会引导你完成 6 步流程，最终输出完整的日报 Markdown 文件�
 
 ### 第一步：确认日期
 
-AI 会询问日报对应的**北京时间**日期，自动推算美东交易日。
+AI 自动确认日报对应的**北京时间**日期，推算美东交易日。
 
-### 第二步：数据采集
+### 第二步：数据采集（AI 自动执行）
 
-AI 自动执行以下 Skills：
-
-```bash
-/market-status              # 市场状态
-/fmp SPX,DJI,IXIC,RUT,VIX   # 指数数据
-/commodity GOLD,SILVER      # 贵金属
-/earnings week              # 财报日历
-/ondo-tokens list           # Ondo 币股列表
-```
-
-同时搜索最近 24 小时的热点新闻。
+AI 自动调用 API 获取：
+- 市场状态、指数数据、贵金属、财报日历、Ondo 币股列表
+- 最近 24 小时热点新闻
 
 ### 第三步：生成初稿
 
-基于模板生成日报初稿。
+基于模板生成日报初稿，社区热议部分待补充。
 
-### 第四步：外部查询
+### 第四步：获取 Grok 社区数据
 
-AI 生成两个提示词，你需要分别去：
+AI 输出 **Grok 提示词**，你需要：
+1. 复制提示词
+2. 打开 [Grok](https://grok.x.ai) 粘贴查询
+3. 将 Grok 返回结果粘贴回 AI
 
-1. **Grok (X/Twitter)** - 获取社区讨论热度和代表性观点
-2. **ChatGPT/OpenAI** - 获取行业热点深度分析
+### 第五步：获取 OpenAI 深度分析
 
-### 第五步：完善日报
+AI 整合 Grok 数据后，输出 **OpenAI 提示词**，你需要：
+1. 复制提示词
+2. 打开 [ChatGPT](https://chat.openai.com) 粘贴查询
+3. 将 ChatGPT 返回结果粘贴回 AI
 
-将 Grok 和 ChatGPT 的结果告诉 AI，它会：
+### 第六步：完善日报
 
-- 整合信息到日报对应章节
-- 验证所有标的是否在 Ondo 支持范围
-- 优化运营话术
+AI 整合所有外部数据，补充风险提示，优化运营话术。
 
-### 第六步：最终验证
+### 第七步：最终验证
 
 AI 执行验证清单：
 
@@ -109,10 +118,34 @@ AI 执行验证清单：
 |--------|------|
 | 数据准确性 | 价格与 API 返回一致 |
 | 日期一致性 | 标题、正文、数据日期一致 |
-| 新闻出处 | 每条新闻有来源和日期 |
-| Ondo 标的 | 已通过 `/ondo-tokens check` |
+| 新闻出处 | 每条新闻有来源和时间戳 |
+| Ondo 标的 | 已通过验证 |
 | 占位符清理 | 无模板残留 |
 | 时区标注 | 美东+北京时间 |
+
+---
+
+## 交互示例
+
+完整的交互流程示例请参考：[TUTORIAL_DAILY_REPORT_EXAMPLE.md](./TUTORIAL_DAILY_REPORT_EXAMPLE.md)
+
+**简化流程图**：
+
+```
+用户: "生成今天的日报"
+        ↓
+   AI: [数据采集] → [初稿] → [Grok提示词]
+        ↓
+用户: 去 Grok 查询 → [粘贴结果]
+        ↓
+   AI: [整合社区热议] → [OpenAI提示词]
+        ↓
+用户: 去 ChatGPT 查询 → [粘贴结果]
+        ↓
+   AI: [整合深度分析] → [最终验证] → ✅ 完成
+```
+
+**交互轮次**：4 轮（启动 → Grok结果 → OpenAI结果 → 完成）
 
 ---
 
@@ -192,11 +225,16 @@ AI 执行验证清单：
 
 ```
 daily-report/
+├── .env                                # API Keys（自动生成，勿提交 Git）
 ├── CLAUDE.md                           # Claude 配置
 ├── README.md                           # 本文件
+├── init.sh                             # 初始化脚本
 ├── ONDO_DAILY_REPORT_TEMPLATE_PROMPT.txt  # 主提示词
 ├── ONDO_DAILY_REPORT_TEMPLATE_V2.md    # 日报模板
+├── TUTORIAL_DAILY_REPORT_EXAMPLE.md    # 交互流程教程
+├── ondo_daily_report_YYYY-MM-DD.md     # 生成的日报（按日期命名）
 └── .claude/
+    ├── settings.local.json             # Claude Code 配置（自动生成）
     └── skills/
         ├── massive-api/                # Polygon API
         ├── fmp-api/                    # FMP 指数 API
@@ -212,7 +250,11 @@ daily-report/
 
 ### Q: API Key 报错怎么办？
 
-确认 `.claude/settings.local.json` 配置正确，且 API Key 有效。
+确认配置文件存在且 API Key 有效：
+- opencode 用户：检查 `.env` 文件
+- Claude Code 用户：检查 `.claude/settings.local.json`
+
+或重新运行 `./init.sh` 配置。
 
 ### Q: 某只股票查不到数据？
 
@@ -239,4 +281,5 @@ FMP 免费计划不支持 NDX（纳指100），请使用 IXIC（纳指综合）�
 
 ## 更新日志
 
+- **2026-01-22**: 优化交互流程，Grok/OpenAI 分两次获取；新增交互教程文档
 - **2026-01-22**: 初始版本，支持 6 个 Skills

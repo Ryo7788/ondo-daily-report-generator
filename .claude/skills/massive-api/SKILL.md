@@ -37,13 +37,17 @@ $ARGUMENTS
 
 ### 1. 环境变量检查
 
-从环境变量获取API Key：
+从项目 .env 或环境变量获取 API Key：
 ```bash
+# 自动加载项目级 .env 文件
+if [ -f ".env" ]; then
+    export $(grep -v '^#' .env | xargs)
+fi
+
 API_KEY="${MASSIVE_API_KEY}"
 if [ -z "$API_KEY" ]; then
     echo "Error: MASSIVE_API_KEY 未配置"
-    echo "请在 .claude/settings.local.json 中设置:"
-    echo '  "env": { "MASSIVE_API_KEY": "your_key" }'
+    echo "请运行 ./init.sh 配置 API Key"
     exit 1
 fi
 ```
