@@ -6,14 +6,27 @@
 
 ## 给人类用户
 
+### 前提条件
+
+- 已安装 [Claude Code](https://docs.anthropic.com/en/docs/claude-code) 或 [opencode](https://github.com/opencode-ai/opencode)
+- 已获取 Polygon 和 FMP 的 API Keys（见下方）
+
 ### 快速开始
 
 ```bash
-# 1. 初始化配置（输入 API Keys）
+# 1. 克隆项目
+git clone <repo-url> daily-report
+cd daily-report
+
+# 2. 初始化配置（输入 API Keys）
 ./init.sh
 
-# 2. 启动 AI 助手（Claude Code / opencode）
-# 3. 输入：
+# 3. 启动 AI 助手
+claude   # Claude Code
+# 或
+opencode # opencode
+
+# 4. 输入：
 用模板帮我生成今天的 Ondo 日报
 ```
 
@@ -70,6 +83,23 @@ FMP 免费计划不支持 NDX，用 IXIC（纳指综合）替代
 ### 输出文件
 
 生成的日报：`ondo_daily_report_YYYY-MM-DD.md`
+
+### 给你的 AI 助手的提示词
+
+复制以下内容发送给 AI，即可开始生成日报：
+
+```
+请阅读 ONDO_DAILY_REPORT_TEMPLATE_PROMPT.txt 了解完整流程，然后帮我生成今天的 Ondo 美股日报。
+
+按照模板流程执行：
+1. 确认日期
+2. 调用 Skills 采集数据（指数、个股、商品、财报、市场状态）
+3. 生成初稿
+4. 输出 Grok 提示词让我查询社区热议
+5. 整合后输出 OpenAI 提示词让我查询深度分析
+6. 完善并验证日报
+7. 保存为 ondo_daily_report_YYYY-MM-DD.md
+```
 
 ---
 
