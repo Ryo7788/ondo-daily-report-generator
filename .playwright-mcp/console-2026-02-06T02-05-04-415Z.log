@@ -1,8 +1,0 @@
-[    5460ms] [WARNING] [.WebGL-0x12c00564e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels @ https://x.com/i/grok:363
-[    5461ms] [WARNING] [.WebGL-0x12c0056f000]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels @ https://x.com/i/grok:363
-[    5461ms] [WARNING] [.WebGL-0x12c0056f000]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels @ https://x.com/i/grok:363
-[    5461ms] [WARNING] [.WebGL-0x12c00576e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat) @ https://x.com/i/grok:363
-[   14714ms] i: ApiError: https://api.x.com/1.1/account/settings.json HTTP-0 codes:[1004]
-    at u (https://abs.twimg.com/responsive-web/client-web/main.2b28152a.js:31:23220)
-    at https://abs.twimg.com/responsive-web/client-web/main.2b28152a.js:31:24010
-    at https://abs.twimg.com/responsive-web/client-web/main.2b28152a.js:31:24060

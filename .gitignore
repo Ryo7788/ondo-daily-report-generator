@@ -3,3 +3,6 @@ logs/
 reports/
 settings.local.json
 *.tar.gz
+.DS_Store
+.playwright-mcp/
+ondo_daily_report_*.md
