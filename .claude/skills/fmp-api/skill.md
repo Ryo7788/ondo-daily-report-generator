@@ -77,11 +77,22 @@ fi
 
 **指数报价** (默认)
 ```bash
-# 单个指数
+# 单个指数（推荐，免费计划可用）
 curl -s "https://financialmodelingprep.com/stable/quote?symbol=%5EGSPC&apikey=${API_KEY}"
+curl -s "https://financialmodelingprep.com/stable/quote?symbol=%5EDJI&apikey=${API_KEY}"
+curl -s "https://financialmodelingprep.com/stable/quote?symbol=%5EIXIC&apikey=${API_KEY}"
+curl -s "https://financialmodelingprep.com/stable/quote?symbol=%5ERUT&apikey=${API_KEY}"
+```
 
-# 批量指数（逗号分隔）
+> ⚠️ **重要**：批量查询（逗号分隔多个symbol）在免费计划下会返回 "Premium Query Parameter" 错误。
+> **解决方案**：分别对每个指数单独发起请求，而不是批量查询。
+
+```bash
+# ❌ 批量查询 - 需要付费订阅
 curl -s "https://financialmodelingprep.com/stable/quote?symbol=%5EGSPC,%5EDJI,%5EIXIC,%5ERUT&apikey=${API_KEY}"
+# 返回: Premium Query Parameter
+
+# ✅ 单独查询 - 免费计划可用（分别请求每个指数）
 ```
 
 **历史日K线**
@@ -135,3 +146,4 @@ SPX 标普500指数
 2. **Ticker格式**: 指数需要加 `^` 前缀（如 `^GSPC`）
 3. **请求限制**: 免费计划 250次/天
 4. **URL编码**: `^` 符号在URL中需要编码为 `%5E`
+5. **⚠️ 批量查询限制**: 免费计划下，批量查询（多个symbol逗号分隔）会返回 "Premium Query Parameter" 错误。**必须单独查询每个指数**，不要尝试批量！

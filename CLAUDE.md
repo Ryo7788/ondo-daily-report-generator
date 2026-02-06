@@ -16,6 +16,7 @@
 |------|------|
 | `ONDO_DAILY_REPORT_TEMPLATE_PROMPT.txt` | 日报生成主提示词（定义流程和规则）|
 | `ONDO_DAILY_REPORT_TEMPLATE_V2.md` | 日报 Markdown 模板 |
+| `API_KEYS_GUIDE.md` | API Key 配置指南（FMP + Polygon）|
 
 ## 依赖 Skills
 
@@ -51,10 +52,11 @@
 ## 日报生成流程
 
 ```
-1. 确认日期 → 2. 数据采集 → 3. 生成初稿 → 4. Grok查询 → 5. OpenAI查询 → 6. 完善日报 → 7. 最终验证
+0. 检查API Key → 1. 确认日期 → 2. 数据采集 → 3. 生成初稿 → 4. Grok查询 → 5. OpenAI查询 → 6. 完善日报 → 7. 最终验证
 ```
 
 详细流程见 `ONDO_DAILY_REPORT_TEMPLATE_PROMPT.txt`
+API 配置见 `API_KEYS_GUIDE.md`
 交互示例见 `TUTORIAL_DAILY_REPORT_EXAMPLE.md`
 
 ## 输出示例
@@ -63,6 +65,8 @@
 
 ## 注意事项
 
-1. **Ondo 标的验证**：所有提及的个股必须通过 `/ondo-tokens check` 验证
-2. **数据来源标注**：新闻和数据需标注来源（Reuters/CNBC/Bloomberg 等）
-3. **时区说明**：关键时间需同时标注美东和北京时间
+1. **API Key 检查**：每次生成日报前必须验证 FMP 和 Polygon API 可用性（详见 `API_KEYS_GUIDE.md`）
+2. **严禁降级**：API 不可用时必须暂停并询问用户，不得使用 WebSearch 替代
+3. **Ondo 标的验证**：所有提及的个股必须通过 `/ondo-tokens check` 验证
+4. **数据来源标注**：新闻和数据需标注来源（Reuters/CNBC/Bloomberg 等）
+5. **时区说明**：关键时间需同时标注美东和北京时间

@@ -1,0 +1,13 @@
+[    2439ms] [WARNING] [.WebGL-0x10c0049a200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels @ https://x.com/i/grok:361
+[    2441ms] [WARNING] [.WebGL-0x10c00493600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels @ https://x.com/i/grok:361
+[    2441ms] [WARNING] [.WebGL-0x10c00493600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels @ https://x.com/i/grok:361
+[    2442ms] [WARNING] [.WebGL-0x10c004a2600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat) @ https://x.com/i/grok:361
+[   32663ms] [ERROR] Failed to load resource: net::ERR_TIMED_OUT @ https://accounts.google.com/gsi/client:0
+[  149184ms] [ERROR] The request has been aborted. @ https://x.com/i/flow/login?redirect_after_login=%2Fi%2Fgrok:0
+[  149185ms] [ERROR] [GSI_LOGGER]: FedCM get() rejects with AbortError: signal is aborted without reason @ https://accounts.google.com/gsi/client:74
+[  152302ms] [ERROR] The request has been aborted. @ https://x.com/i/flow/login?redirect_after_login=%2Fi%2Fgrok:0
+[  152336ms] [ERROR] [GSI_LOGGER]: FedCM get() rejects with AbortError: signal is aborted without reason @ https://accounts.google.com/gsi/client:74
+[  165499ms] [ERROR] Cross-Origin-Opener-Policy policy would block the window.postMessage call. @ https://accounts.google.com/gsi/client:337
+[  165499ms] [ERROR] Cross-Origin-Opener-Policy policy would block the window.postMessage call. @ https://accounts.google.com/gsi/client:337
+[  231542ms] [ERROR] Failed to load resource: net::ERR_TIMED_OUT @ https://abs.twimg.com/responsive-web/client-web/node_modules_pnpm_x-clients_features_3_1_10__emotion_is-prop-valid_0_8_8__types_react-dom_18_-95e948.886baf2a.js:0
+[  234093ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_CLOSED @ https://ads-api.x.com/12/measurement/dcm_local_id:0

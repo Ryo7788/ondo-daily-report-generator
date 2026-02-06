@@ -53,13 +53,13 @@ fi
 **财报日历（日期范围）**
 ```bash
 # 获取指定日期范围的财报
-curl -s "https://financialmodelingprep.com/api/v3/earning_calendar?from=2026-01-20&to=2026-01-24&apikey=${API_KEY}"
+curl -s "https://financialmodelingprep.com/stable/earnings-calendar?from=2026-01-20&to=2026-01-24&apikey=${API_KEY}"
 ```
 
 **单股财报查询**
 ```bash
 # 获取特定股票的历史财报记录
-curl -s "https://financialmodelingprep.com/api/v3/historical/earning_calendar/NFLX?apikey=${API_KEY}"
+curl -s "https://financialmodelingprep.com/stable/historical/earnings-calendar/NFLX?apikey=${API_KEY}"
 ```
 
 ### 3. 返回数据结构

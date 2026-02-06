@@ -1,0 +1,3 @@
+[    1478ms] [WARNING] [.WebGL-0x10c00584000]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels @ https://chatgpt.com/:30
+[   21431ms] [WARNING] [.WebGL-0x10c00585800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels @ https://chatgpt.com/:0
+[   22727ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://chatgpt.com/backend-api/conversation/init:0

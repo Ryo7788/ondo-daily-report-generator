@@ -1,17 +1,5 @@
-# API Keys 配置（包含敏感信息）
 .env
-.claude/settings.local.json
-
-# 内部工作流配置（不上传）
-.claude/agents/
-.claude/settings/
-.claude/system-prompts/
-
-# 系统文件
-.DS_Store
-*.swp
-*.swo
-*~
-
-# 生成的日报（可选：如果想追踪日报历史，可注释掉这行）
-# ondo_daily_report_*.md
+logs/
+reports/
+settings.local.json
+*.tar.gz
