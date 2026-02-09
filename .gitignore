@@ -1,6 +1,6 @@
 .env
-logs/
-reports/
+/logs/
+/reports/
 settings.local.json
 *.tar.gz
 .DS_Store
