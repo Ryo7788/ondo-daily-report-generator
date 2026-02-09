@@ -8,6 +8,8 @@ export interface ReportMeta {
   sizeBytes: number;
   modifiedAt: string;
   location: "reports" | "root";
+  title?: string;
+  highlights?: string[];
 }
 
 export function listReports(): ReportMeta[] {
@@ -48,7 +50,47 @@ export function listReports(): ReportMeta[] {
     }
   }
 
-  return reports.sort((a, b) => b.date.localeCompare(a.date));
+  const sorted = reports.sort((a, b) => b.date.localeCompare(a.date));
+
+  // Extract title and highlights from each report
+  for (const report of sorted) {
+    const filePath = report.location === "reports"
+      ? path.join(REPORTS_DIR, report.filename)
+      : path.join(PROJECT_DIR, report.filename);
+    try {
+      const content = fs.readFileSync(filePath, "utf-8");
+      const meta = extractReportMeta(content);
+      report.title = meta.title;
+      report.highlights = meta.highlights;
+    } catch {}
+  }
+
+  return sorted;
+}
+
+function extractReportMeta(content: string): { title: string; highlights: string[] } {
+  const lines = content.split("\n");
+  let title = "";
+  const highlights: string[] = [];
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    // First h1 is the title
+    if (!title && /^# /.test(trimmed)) {
+      title = trimmed.replace(/^# /, "");
+      continue;
+    }
+    // Collect h3 highlights from 宣发点 section (🔥 lines)
+    if (/^### 🔥/.test(trimmed)) {
+      highlights.push(trimmed.replace(/^### /, ""));
+    }
+    // Stop after we hit the first ## that isn't 宣发点
+    if (/^## /.test(trimmed) && !trimmed.includes("宣发点") && title) {
+      break;
+    }
+  }
+
+  return { title, highlights };
 }
 
 export function readReport(date: string): string | null {

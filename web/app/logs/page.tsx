@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useT } from "@/lib/i18n";
 
 interface LogEntry {
   type: string;
@@ -34,6 +35,7 @@ export default function LogsPage() {
   const [typeFilter, setTypeFilter] = useState<string>("");
   const [launchdLog, setLaunchdLog] = useState("");
   const [launchdSource, setLaunchdSource] = useState<"production" | "test">("test");
+  const t = useT();
 
   useEffect(() => {
     fetch("/api/logs/raw")
@@ -64,12 +66,12 @@ export default function LogsPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Logs</h1>
+      <h1 className="text-2xl font-bold">{t("logs")}</h1>
 
       <Tabs defaultValue="raw">
         <TabsList>
-          <TabsTrigger value="raw">Execution Logs</TabsTrigger>
-          <TabsTrigger value="launchd">Launchd Logs</TabsTrigger>
+          <TabsTrigger value="raw">{t("executionLogs")}</TabsTrigger>
+          <TabsTrigger value="launchd">{t("launchdLogs")}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="raw" className="space-y-4">
@@ -85,20 +87,20 @@ export default function LogsPage() {
             </select>
 
             <div className="flex gap-1">
-              {["", "assistant", "user", "system", "result"].map((t) => (
+              {["", "assistant", "user", "system", "result"].map((tp) => (
                 <Button
-                  key={t || "all"}
-                  variant={typeFilter === t ? "default" : "outline"}
+                  key={tp || "all"}
+                  variant={typeFilter === tp ? "default" : "outline"}
                   size="sm"
-                  onClick={() => { setTypeFilter(t); setOffset(0); }}
+                  onClick={() => { setTypeFilter(tp); setOffset(0); }}
                 >
-                  {t || "All"}
+                  {tp || t("all")}
                 </Button>
               ))}
             </div>
 
             <span className="text-sm text-muted-foreground ml-auto">
-              {total} entries
+              {total} {t("entries")}
             </span>
           </div>
 
@@ -146,10 +148,10 @@ export default function LogsPage() {
                   disabled={offset === 0}
                   onClick={() => setOffset(Math.max(0, offset - 50))}
                 >
-                  Previous
+                  {t("previous")}
                 </Button>
                 <span className="text-sm text-muted-foreground">
-                  {offset + 1} - {Math.min(offset + 50, total)} of {total}
+                  {offset + 1} - {Math.min(offset + 50, total)} {t("of")} {total}
                 </span>
                 <Button
                   variant="outline"
@@ -157,7 +159,7 @@ export default function LogsPage() {
                   disabled={offset + 50 >= total}
                   onClick={() => setOffset(offset + 50)}
                 >
-                  Next
+                  {t("next")}
                 </Button>
               </div>
             </CardContent>
@@ -171,21 +173,21 @@ export default function LogsPage() {
               size="sm"
               onClick={() => setLaunchdSource("test")}
             >
-              Test
+              {t("test")}
             </Button>
             <Button
               variant={launchdSource === "production" ? "default" : "outline"}
               size="sm"
               onClick={() => setLaunchdSource("production")}
             >
-              Production
+              {t("production")}
             </Button>
           </div>
           <Card>
             <CardContent className="pt-4">
               <ScrollArea className="h-[600px]">
                 <pre className="text-xs font-mono whitespace-pre-wrap break-words">
-                  {launchdLog || "(empty)"}
+                  {launchdLog || t("empty")}
                 </pre>
               </ScrollArea>
             </CardContent>

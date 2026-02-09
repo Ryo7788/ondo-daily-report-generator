@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useT } from "@/lib/i18n";
 
 interface ReportMeta {
   date: string;
@@ -32,6 +33,7 @@ export default function Dashboard() {
   const [schedule, setSchedule] = useState<Schedule | null>(null);
   const [apiStatus, setApiStatus] = useState<ApiStatus | null>(null);
   const [triggering, setTriggering] = useState(false);
+  const t = useT();
 
   useEffect(() => {
     fetch("/api/reports").then((r) => r.json()).then(setReports);
@@ -60,12 +62,12 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Dashboard</h1>
+      <h1 className="text-2xl font-bold">{t("dashboard")}</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Status</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">{t("status")}</CardTitle>
           </CardHeader>
           <CardContent>
             {status?.status === "generating" ? (
@@ -74,23 +76,23 @@ export default function Dashboard() {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
                   <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500" />
                 </span>
-                <span className="font-semibold">Generating...</span>
+                <span className="font-semibold">{t("generating")}</span>
               </div>
             ) : (
               <div className="flex items-center gap-2">
                 <span className="h-3 w-3 rounded-full bg-muted-foreground/30" />
-                <span className="font-semibold">Idle</span>
+                <span className="font-semibold">{t("idle")}</span>
               </div>
             )}
             {status?.todayReportExists && (
-              <p className="text-xs text-muted-foreground mt-1">Today&apos;s report ready</p>
+              <p className="text-xs text-muted-foreground mt-1">{t("todayReportReady")}</p>
             )}
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Latest Report</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">{t("latestReport")}</CardTitle>
           </CardHeader>
           <CardContent>
             {latest ? (
@@ -99,14 +101,14 @@ export default function Dashboard() {
                 <p className="text-xs text-muted-foreground">{(latest.sizeBytes / 1024).toFixed(1)} KB</p>
               </Link>
             ) : (
-              <p className="text-muted-foreground">No reports</p>
+              <p className="text-muted-foreground">{t("noReports")}</p>
             )}
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Schedule</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">{t("schedule")}</CardTitle>
           </CardHeader>
           <CardContent>
             {schedule?.schedule ? (
@@ -116,18 +118,18 @@ export default function Dashboard() {
                   {String(schedule.schedule.minute).padStart(2, "0")}
                 </p>
                 <Badge variant={schedule.mainService.loaded ? "default" : "destructive"} className="mt-1">
-                  {schedule.mainService.loaded ? "Active" : "Not loaded"}
+                  {schedule.mainService.loaded ? t("active") : t("notLoaded")}
                 </Badge>
               </>
             ) : (
-              <p className="text-muted-foreground">Not configured</p>
+              <p className="text-muted-foreground">{t("notConfigured")}</p>
             )}
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">API Health</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">{t("apiHealth")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-1">
             {apiStatus ? (
@@ -142,7 +144,7 @@ export default function Dashboard() {
                 </div>
               </>
             ) : (
-              <p className="text-xs text-muted-foreground">Checking...</p>
+              <p className="text-xs text-muted-foreground">{t("checking")}</p>
             )}
           </CardContent>
         </Card>
@@ -150,24 +152,24 @@ export default function Dashboard() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-sm font-medium text-muted-foreground">Quick Actions</CardTitle>
+          <CardTitle className="text-sm font-medium text-muted-foreground">{t("quickActions")}</CardTitle>
         </CardHeader>
         <CardContent className="flex gap-3">
           <Button onClick={handleTrigger} disabled={triggering || status?.status === "generating"}>
-            {triggering ? "Starting..." : "Generate Now"}
+            {triggering ? t("starting") : t("generateNow")}
           </Button>
           <Button variant="outline" asChild>
-            <Link href="/logs">View Logs</Link>
+            <Link href="/logs">{t("viewLogs")}</Link>
           </Button>
           <Button variant="outline" asChild>
-            <Link href="/reports">All Reports</Link>
+            <Link href="/reports">{t("allReports")}</Link>
           </Button>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-sm font-medium text-muted-foreground">Recent Reports</CardTitle>
+          <CardTitle className="text-sm font-medium text-muted-foreground">{t("recentReports")}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-2">

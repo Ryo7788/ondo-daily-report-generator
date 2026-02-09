@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { useT, useLanguage } from "@/lib/i18n";
 import {
   LayoutDashboard,
   FileText,
@@ -11,21 +12,23 @@ import {
 } from "lucide-react";
 
 const links = [
-  { href: "/", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/reports", label: "Reports", icon: FileText },
-  { href: "/trigger", label: "Trigger", icon: Play },
-  { href: "/logs", label: "Logs", icon: ScrollText },
+  { href: "/", labelKey: "dashboard" as const, icon: LayoutDashboard },
+  { href: "/reports", labelKey: "reports" as const, icon: FileText },
+  { href: "/trigger", labelKey: "trigger" as const, icon: Play },
+  { href: "/logs", labelKey: "logs" as const, icon: ScrollText },
 ];
 
 export function Nav() {
   const pathname = usePathname();
+  const t = useT();
+  const { lang, toggle } = useLanguage();
 
   return (
     <nav className="flex flex-col w-56 border-r bg-muted/40 p-4 gap-1 shrink-0">
       <div className="font-semibold text-lg px-3 py-4 mb-2">
-        Ondo Reports
+        {t("ondoReports")}
       </div>
-      {links.map(({ href, label, icon: Icon }) => {
+      {links.map(({ href, labelKey, icon: Icon }) => {
         const active = href === "/" ? pathname === "/" : pathname.startsWith(href);
         return (
           <Link
@@ -39,10 +42,18 @@ export function Nav() {
             )}
           >
             <Icon className="h-4 w-4" />
-            {label}
+            {t(labelKey)}
           </Link>
         );
       })}
+      <div className="mt-auto">
+        <button
+          onClick={toggle}
+          className="w-full rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+        >
+          {lang === "zh" ? "EN" : "中文"}
+        </button>
+      </div>
     </nav>
   );
 }
