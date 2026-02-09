@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { useT } from "@/lib/i18n";
+import { ProgressPanel } from "@/components/progress-panel";
 
 interface Status {
   status: "idle" | "generating";
@@ -122,6 +123,8 @@ export default function TriggerPage() {
           </CardContent>
         </Card>
       </div>
+
+      {status?.status === "generating" && <ProgressPanel />}
 
       {message && (
         <Card>

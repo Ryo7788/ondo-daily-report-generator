@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useT } from "@/lib/i18n";
+import { ProgressPanel } from "@/components/progress-panel";
 
 interface ReportMeta {
   date: string;
@@ -149,6 +150,8 @@ export default function Dashboard() {
           </CardContent>
         </Card>
       </div>
+
+      {status?.status === "generating" && <ProgressPanel />}
 
       <Card>
         <CardHeader>
