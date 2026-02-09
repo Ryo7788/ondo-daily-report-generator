@@ -32,7 +32,7 @@ BOLD='\033[1m'
 NC='\033[0m'
 
 step=0
-total_steps=6
+total_steps=7
 
 #--- 辅助函数 -----------------------------------------------------------------
 header() {
@@ -142,9 +142,53 @@ fi
 ok "项目文件完整"
 
 #==============================================================================
-# Step 2: 配置 API Keys
+# Step 2: Claude Code 账号登录
 #==============================================================================
-header "配置 API Keys"
+header "Claude Code 账号登录"
+
+echo "  日报生成依赖 Claude Code（Anthropic 的 AI CLI 工具）。"
+echo "  每位用户需要用自己的 Anthropic 账号登录。"
+echo ""
+
+# 检查是否已登录：用一个最小化的请求测试
+info "检查登录状态..."
+if "$CLAUDE_BIN" -p "hi" --max-turns 1 &>/dev/null; then
+    ok "Claude Code 已登录，账号可用"
+else
+    warn "Claude Code 未登录或账号不可用"
+    echo ""
+    echo "  请在弹出的交互流程中完成登录："
+    echo "  （通常选择 Anthropic 账号 → 浏览器授权）"
+    echo ""
+    if ask_yes_no "是否现在运行 'claude login'？"; then
+        "$CLAUDE_BIN" login
+        # 验证登录结果
+        echo ""
+        if "$CLAUDE_BIN" -p "hi" --max-turns 1 &>/dev/null; then
+            ok "登录成功"
+        else
+            warn "登录似乎未完成，后续可手动运行: claude login"
+        fi
+    else
+        warn "跳过登录。后续请手动运行: claude login"
+    fi
+fi
+
+#==============================================================================
+# Step 3: 配置 API Keys
+#==============================================================================
+header "配置 API Keys（需要你自己的 Key）"
+
+echo "  日报生成需要调用两个金融数据 API，每位用户需要注册自己的免费 Key。"
+echo ""
+echo "  ┌─────────────────────────────────────────────────────────┐"
+echo "  │  FMP（指数/商品/财报）  免费 250次/天                   │"
+echo "  │  注册地址: https://financialmodelingprep.com/developer  │"
+echo "  │                                                         │"
+echo "  │  Polygon（个股/ETF）    免费 5次/分钟                   │"
+echo "  │  注册地址: https://polygon.io                           │"
+echo "  └─────────────────────────────────────────────────────────┘"
+echo ""
 
 ENV_FILE="${PROJECT_DIR}/.env"
 CLAUDE_CONFIG="${PROJECT_DIR}/.claude/settings.local.json"
@@ -170,16 +214,11 @@ if [ -f "$ENV_FILE" ]; then
 fi
 
 if [ "${SKIP_API_WRITE:-}" != "true" ]; then
+    echo "  请输入你的 API Key（回车跳过保留空值）："
     echo ""
-    echo "  需要两个 API Key（回车跳过保留空值）："
+    read -p "  FMP_API_KEY: " FMP_KEY
     echo ""
-    echo "  1. FMP API Key（指数/商品/财报数据）"
-    info "获取地址: https://financialmodelingprep.com"
-    read -p "     FMP_API_KEY: " FMP_KEY
-    echo ""
-    echo "  2. Polygon API Key（个股/ETF 行情）"
-    info "获取地址: https://polygon.io"
-    read -p "     MASSIVE_API_KEY: " POLYGON_KEY
+    read -p "  MASSIVE_API_KEY (Polygon): " POLYGON_KEY
 
     # 写入 .env
     cat > "$ENV_FILE" <<EOF
@@ -236,7 +275,7 @@ EOF
 fi
 
 #==============================================================================
-# Step 3: 安装 Web 面板依赖
+# Step 4: 安装 Web 面板依赖
 #==============================================================================
 header "安装 Web 面板依赖"
 
@@ -256,7 +295,7 @@ else
 fi
 
 #==============================================================================
-# Step 4: 创建必要目录
+# Step 5: 创建必要目录
 #==============================================================================
 header "创建目录结构"
 
@@ -275,7 +314,7 @@ chmod +x "${PROJECT_DIR}/scripts/test_trigger.sh"
 ok "脚本已设为可执行"
 
 #==============================================================================
-# Step 5: 配置 launchd 定时任务
+# Step 6: 配置 launchd 定时任务
 #==============================================================================
 header "配置 launchd 定时任务"
 
@@ -355,7 +394,7 @@ else
 fi
 
 #==============================================================================
-# Step 6: 冒烟测试
+# Step 7: 冒烟测试
 #==============================================================================
 header "冒烟测试"
 
