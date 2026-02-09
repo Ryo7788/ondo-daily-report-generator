@@ -13,8 +13,10 @@
 
 set -euo pipefail
 
-PROJECT_DIR="/path/to/ondo-daily-report-generator"
-SCRIPT_PATH="${PROJECT_DIR}/scripts/auto_ondo_report.sh"
+# 自动检测项目目录
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+SCRIPT_PATH="${SCRIPT_DIR}/auto_ondo_report.sh"
 LOG_DIR="${PROJECT_DIR}/logs"
 # launchd 日志必须放在 /tmp，macOS TCC 会阻止 launchd 进程写入 ~/Desktop
 LAUNCHD_LOG_DIR="/tmp/ondo-daily-report"
@@ -140,7 +142,7 @@ schedule_test() {
         <key>PATH</key>
         <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
         <key>HOME</key>
-        <string>$HOME</string>
+        <string>${HOME}</string>
     </dict>
 
     <key>StandardOutPath</key>

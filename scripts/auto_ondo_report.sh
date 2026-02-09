@@ -25,15 +25,22 @@ done
 #--- 参数解析结束 -------------------------------------------------------------
 
 #--- 配置区 -------------------------------------------------------------------
-PROJECT_DIR="/path/to/ondo-daily-report-generator"
-REPORT_DIR="/path/to/ondo-daily-report-generator/reports"
-LOG_DIR="/path/to/ondo-daily-report-generator/logs"
+# 自动检测项目目录（基于脚本自身位置）
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+REPORT_DIR="${PROJECT_DIR}/reports"
+LOG_DIR="${PROJECT_DIR}/logs"
 TODAY=$(date +"%Y-%m-%d")
 WEEKDAY=$(date +%u)  # 1=周一, 7=周日
 
-# Claude Code 路径（cron 环境 PATH 可能不全，显式指定）
-# 如果 claude 不在这个路径，运行 `which claude` 找到实际路径后替换
-CLAUDE_BIN="/opt/homebrew/bin/claude"
+# Claude Code 路径（launchd 环境 PATH 可能不全）
+# 按优先级查找：PATH 中 > homebrew > 用户 npm global
+CLAUDE_BIN=$(command -v claude 2>/dev/null || echo "")
+if [ -z "$CLAUDE_BIN" ]; then
+    for p in /opt/homebrew/bin/claude /usr/local/bin/claude "$HOME/.npm-global/bin/claude"; do
+        [ -x "$p" ] && CLAUDE_BIN="$p" && break
+    done
+fi
 
 # 超时时间（秒）- 日报生成通常需要 15-30 分钟
 TIMEOUT=2400  # 40 分钟

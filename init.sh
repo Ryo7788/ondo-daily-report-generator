@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Ondo 美股日报生成器 - 初始化脚本
-# 用于配置 API Keys（同时支持 opencode 和 Claude Code）
+# Ondo 美股日报生成器 - 初始化脚本（仅配置 API Keys）
+# 完整部署请使用: bash setup.sh
 
 set -e
 
