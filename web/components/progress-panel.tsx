@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { useT } from "@/lib/i18n";
 import Link from "next/link";
 
@@ -47,7 +48,26 @@ export function ProgressPanel() {
     durationMs: null,
     costUsd: null,
   });
+  const [aborting, setAborting] = useState(false);
   const eventSourceRef = useRef<EventSource | null>(null);
+
+  const handleAbort = async () => {
+    setAborting(true);
+    try {
+      await fetch("/api/abort", { method: "POST" });
+      setData((prev) => ({
+        ...prev,
+        done: true,
+        success: false,
+        currentTool: null,
+        currentToolDetail: null,
+      }));
+      eventSourceRef.current?.close();
+    } catch {
+      // ignore
+    }
+    setAborting(false);
+  };
 
   useEffect(() => {
     const es = new EventSource("/api/progress");
@@ -123,11 +143,24 @@ export function ProgressPanel() {
       <CardHeader className="pb-3">
         <CardTitle className="text-sm font-medium text-muted-foreground flex items-center justify-between">
           <span>{t("generationProgress")}</span>
-          {phases.length > 0 && (
-            <span className="text-xs tabular-nums">
-              {completedCount}/{phases.length} {t("stepsCompleted")}
-            </span>
-          )}
+          <div className="flex items-center gap-3">
+            {phases.length > 0 && (
+              <span className="text-xs tabular-nums">
+                {completedCount}/{phases.length} {t("stepsCompleted")}
+              </span>
+            )}
+            {!data.done && (
+              <Button
+                variant="destructive"
+                size="sm"
+                className="h-6 text-xs px-2"
+                onClick={handleAbort}
+                disabled={aborting}
+              >
+                {aborting ? t("aborting") : t("abortGeneration")}
+              </Button>
+            )}
+          </div>
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">

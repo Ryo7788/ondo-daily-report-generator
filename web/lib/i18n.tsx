@@ -70,6 +70,9 @@ const translations = {
     phaseIntegrate: "Integrate & refine",
     phaseVerify: "Verify & output",
     stepsCompleted: "steps completed",
+    abortGeneration: "Abort",
+    aborting: "Aborting...",
+    generationAborted: "Aborted",
   },
   zh: {
     ondoReports: "Ondo 日报",
@@ -136,6 +139,9 @@ const translations = {
     phaseIntegrate: "整合数据完善日报",
     phaseVerify: "最终验证并输出",
     stepsCompleted: "步骤已完成",
+    abortGeneration: "终止生成",
+    aborting: "正在终止...",
+    generationAborted: "已终止",
   },
 } as const;
 
