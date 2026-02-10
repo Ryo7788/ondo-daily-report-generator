@@ -25,7 +25,7 @@
 
 ```bash
 # 1. 克隆项目
-git clone https://github.com/Ryo7788/ondo-daily-report-generator.git
+git clone https://github.com/<your-username>/ondo-daily-report-generator.git
 cd ondo-daily-report-generator
 
 # 2. 一键部署

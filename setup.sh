@@ -3,7 +3,7 @@
 # Ondo 美股日报生成器 - 一键部署脚本
 #
 # 用法：
-#   git clone https://github.com/Ryo7788/ondo-daily-report-generator.git
+#   git clone https://github.com/<your-username>/ondo-daily-report-generator.git
 #   cd ondo-daily-report-generator
 #   bash setup.sh
 #

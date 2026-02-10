@@ -1,8 +1,12 @@
 .env
 /logs/
 /reports/
+/automation/
 settings.local.json
 *.tar.gz
+*.zip
+*.png
+*.pptx
 .DS_Store
 .playwright-mcp/
 ondo_daily_report_*.md
