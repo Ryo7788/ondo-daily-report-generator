@@ -5,7 +5,7 @@
 # 用法：
 #   手动运行：bash ~/auto_ondo_report.sh
 #   测试模式：bash ~/auto_ondo_report.sh --test（跳过周末检查）
-#   Cron 定时：0 9 * * 1-5 /bin/bash $HOME/auto_ondo_report.sh
+#   Cron 定时：0 9 * * 1-5 /bin/bash /path/to/scripts/auto_ondo_report.sh
 #
 # 前置条件：
 #   1. Claude Code 已安装（claude 命令可用）

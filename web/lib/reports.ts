@@ -62,7 +62,9 @@ export function listReports(): ReportMeta[] {
       const meta = extractReportMeta(content);
       report.title = meta.title;
       report.highlights = meta.highlights;
-    } catch {}
+    } catch (e) {
+      console.error(`Failed to read report ${report.filename}:`, (e as Error).message);
+    }
   }
 
   return sorted;
@@ -94,17 +96,28 @@ function extractReportMeta(content: string): { title: string; highlights: string
 }
 
 export function readReport(date: string): string | null {
+  // Validate date format to prevent path traversal
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return null;
+
+  const exactName = `ondo_daily_report_${date}.md`;
+
   // Try reports/ directory first
   if (fs.existsSync(REPORTS_DIR)) {
-    const files = fs.readdirSync(REPORTS_DIR).filter((f) => f.includes(date));
-    if (files.length > 0) {
-      return fs.readFileSync(path.join(REPORTS_DIR, files[0]), "utf-8");
+    const filePath = path.join(REPORTS_DIR, exactName);
+    if (fs.existsSync(filePath)) {
+      return fs.readFileSync(filePath, "utf-8");
     }
   }
 
   // Try project root
+  const rootPath = path.join(PROJECT_DIR, exactName);
+  if (fs.existsSync(rootPath)) {
+    return fs.readFileSync(rootPath, "utf-8");
+  }
+
+  // Fallback: loose match for non-standard filenames
   const rootFiles = fs.readdirSync(PROJECT_DIR).filter(
-    (f) => f.includes(date) && f.endsWith(".md") && f.startsWith("ondo_daily_report_")
+    (f) => f.startsWith(`ondo_daily_report_${date}`) && f.endsWith(".md")
   );
   if (rootFiles.length > 0) {
     return fs.readFileSync(path.join(PROJECT_DIR, rootFiles[0]), "utf-8");

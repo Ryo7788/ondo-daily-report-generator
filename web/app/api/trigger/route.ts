@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { spawn, execSync } from "child_process";
+import os from "os";
 import fs from "fs";
 import path from "path";
 import {
@@ -25,7 +26,7 @@ export async function POST(req: Request) {
         env: {
           ...process.env,
           PATH: "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin",
-          HOME: process.env.HOME || "$HOME",
+          HOME: os.homedir(),
         },
       }
     );
@@ -34,7 +35,7 @@ export async function POST(req: Request) {
   }
 
   if (mode === "schedule" && time) {
-    // Validate time format: +N or HH:MM
+    // Validate time format: +N (minutes) or HH:MM (24h)
     if (!/^(\+\d+|\d{1,2}:\d{2})$/.test(time)) {
       return NextResponse.json(
         { error: "Invalid time format. Use +N or HH:MM" },
@@ -45,6 +46,12 @@ export async function POST(req: Request) {
     let hour: number, minute: number;
     if (time.startsWith("+")) {
       const minutes = parseInt(time.slice(1));
+      if (minutes <= 0 || minutes > 1440) {
+        return NextResponse.json(
+          { error: "Minutes must be between 1 and 1440" },
+          { status: 400 }
+        );
+      }
       const target = new Date(Date.now() + minutes * 60 * 1000);
       hour = target.getHours();
       minute = target.getMinutes();
@@ -52,6 +59,12 @@ export async function POST(req: Request) {
       const parts = time.split(":");
       hour = parseInt(parts[0]);
       minute = parseInt(parts[1]);
+      if (hour < 0 || hour > 23 || minute < 0 || minute > 59) {
+        return NextResponse.json(
+          { error: "Invalid time. Hour: 0-23, Minute: 0-59" },
+          { status: 400 }
+        );
+      }
     }
 
     // Unload existing test job
@@ -94,7 +107,7 @@ export async function POST(req: Request) {
         <key>PATH</key>
         <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
         <key>HOME</key>
-        <string>${process.env.HOME || "$HOME"}</string>
+        <string>${os.homedir()}</string>
     </dict>
     <key>StandardOutPath</key>
     <string>${LAUNCHD_LOG_DIR}/test_stdout.log</string>

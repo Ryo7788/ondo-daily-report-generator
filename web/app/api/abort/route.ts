@@ -12,45 +12,34 @@ export async function POST() {
   }
 
   try {
-    // Kill the entire process group tree:
-    // auto_ondo_report.sh → claude -p → child tools (playwright, etc.)
-    // Use pkill to find and kill all related processes
     const killed: number[] = [];
 
-    // 1. Kill claude processes spawned by auto_ondo_report.sh
+    // 1. Find the process group of auto_ondo_report.sh and kill the entire group.
+    //    This cleanly kills the shell script, claude -p, and all child processes.
     try {
-      const claudePids = execSync('pgrep -f "claude.*-p" 2>/dev/null', {
+      const pgid = execSync(`ps -o pgid= -p ${pid}`, {
         encoding: "utf-8",
         timeout: 3000,
-      }).trim().split("\n").filter(Boolean).map(Number);
-      for (const p of claudePids) {
-        try { process.kill(p, "SIGTERM"); killed.push(p); } catch { /* already dead */ }
+      }).trim();
+      if (pgid && /^\d+$/.test(pgid)) {
+        // Kill the entire process group
+        try {
+          process.kill(-parseInt(pgid), "SIGTERM");
+          killed.push(pid);
+        } catch { /* group already dead */ }
       }
-    } catch { /* no match */ }
+    } catch {
+      // Fallback: kill by PID directly
+      try { process.kill(pid, "SIGTERM"); killed.push(pid); } catch { /* already dead */ }
+    }
 
-    // 2. Kill auto_ondo_report.sh
-    try {
-      const shPids = execSync('pgrep -f "auto_ondo_report\\.sh" 2>/dev/null', {
-        encoding: "utf-8",
-        timeout: 3000,
-      }).trim().split("\n").filter(Boolean).map(Number);
-      for (const p of shPids) {
-        try { process.kill(p, "SIGTERM"); killed.push(p); } catch { /* already dead */ }
-      }
-    } catch { /* no match */ }
-
-    // 3. Kill any remaining Chrome for Testing (Playwright browser)
+    // 2. Also kill Playwright browser if running (separate process group)
     try {
       execSync('pkill -f "Google Chrome for Testing" 2>/dev/null', { timeout: 3000 });
     } catch { /* no match */ }
 
-    // 4. If nothing was killed above, try killing by the detected PID directly
-    if (killed.length === 0) {
-      try { process.kill(pid, "SIGTERM"); killed.push(pid); } catch { /* already dead */ }
-    }
-
-    // Brief wait then SIGKILL any survivors
-    await new Promise((r) => setTimeout(r, 1000));
+    // 3. Brief wait then SIGKILL any survivors
+    await new Promise((r) => setTimeout(r, 1500));
     for (const p of killed) {
       try { process.kill(p, "SIGKILL"); } catch { /* already dead */ }
     }

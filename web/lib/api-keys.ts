@@ -13,7 +13,16 @@ function loadEnvKeys(): { FMP_API_KEY?: string; MASSIVE_API_KEY?: string } {
   return parse(content);
 }
 
+// Cache API health results for 5 minutes to avoid burning quota
+let cachedResult: ApiKeyStatus | null = null;
+let cacheTime = 0;
+const CACHE_TTL_MS = 5 * 60 * 1000;
+
 export async function checkApiKeys(): Promise<ApiKeyStatus> {
+  if (cachedResult && Date.now() - cacheTime < CACHE_TTL_MS) {
+    return cachedResult;
+  }
+
   const env = loadEnvKeys();
 
   const result: ApiKeyStatus = {
@@ -53,5 +62,7 @@ export async function checkApiKeys(): Promise<ApiKeyStatus> {
     }
   }
 
+  cachedResult = result;
+  cacheTime = Date.now();
   return result;
 }
