@@ -10,3 +10,7 @@ settings.local.json
 .DS_Store
 .playwright-mcp/
 ondo_daily_report_*.md
+/docs/chatgpt_*.md
+/docs/grok_*.md
+/ppt-assets/
+/scripts/generate_ppt.py
