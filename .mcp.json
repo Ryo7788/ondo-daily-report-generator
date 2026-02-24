@@ -9,7 +9,7 @@
         "--browser",
         "chromium",
         "--user-data-dir",
-        "/tmp/mcp-chrome-profile"
+        "${HOME}/.chrome-mcp-profile"
       ],
       "env": {}
     }

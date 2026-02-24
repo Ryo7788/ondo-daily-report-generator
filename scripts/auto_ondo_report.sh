@@ -151,6 +151,9 @@ notify "Ondo 日报" "开始生成 ${TODAY} 日报..."
 
 cd "$PROJECT_DIR"
 
+# 允许嵌套会话（前端触发时可能已有 Claude Code 会话运行）
+unset CLAUDECODE 2>/dev/null || true
+
 # 核心命令：用 Claude Code 非交互模式生成日报
 # -p: print mode（非交互）
 # --allowedTools: 预授权工具，避免交互确认
